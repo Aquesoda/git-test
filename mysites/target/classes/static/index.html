@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vuejs-2.5.16.js"></script>
+</head>
+<body>
+    <div id="vueroot">
+        测试内容 + nihao
+        <a href="#" class="btn btn-primary">{{msg}}}</a>
+    </div>
+
+    <script type="text/javascript">
+        var vm = new Vue({
+           el:"#vueroot",
+           data:{msg:"点击我"}
+        });
+    </script>
+</body>
+</html>
