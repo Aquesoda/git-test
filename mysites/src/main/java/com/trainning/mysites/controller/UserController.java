@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class UserController {
 
     @RequestMapping("/listusers")
     public String list(String kw, Model model, Pageable pageable){
+        if(kw!=null) kw = "%"+kw+"%";
+        if(kw == null) kw = "%%";
         Page<User> ppu = userService.findAll(kw,pageable);
         model.addAttribute("pages",ppu);
         return "listusers"; //返回页面
@@ -66,26 +69,32 @@ public class UserController {
      * @return  edituser 用户编辑页面
      */
     @PostMapping("/saveuser")
-    public String save(@Valid User user, BindingResult result){
+    public String save(@Valid User user, BindingResult result, RedirectAttributes attr){
         try {
             if (result.hasErrors()) {
+                System.out.println(result.getFieldError().toString());
                 return "redirect:/edituser";
             }
+            if(user.getUid()!=null && user.getUid()>0){
+                User u = userService.findById(user.getUid());
+                user.setPassword(u.getPassword());
+            }
             userService.save(user);
+            attr.addFlashAttribute("ok","保存成功");
             return "redirect:/listusers";
         } catch (Exception ex){
             return "redirect:/edituser";
         }
     }
 
-    @GetMapping("/delete/{uid}")
+    @GetMapping("/deleteuser/{uid}")
     public String delete(@PathVariable("uid")Integer uid) {
             userService.deleteById(uid);
             return "redirect:/listusers";
     }
 
-    @GetMapping("/deletes/{uids}")
-    public String deletes(@PathVariable("uids")String uids){
+    @PostMapping("/deleteusers")
+    public String deletes(String uids){
         List<User> users = new ArrayList<User>();
         JSONObject json = JSONObject.parseObject(uids);
         JSONArray array = json.getJSONArray("uids");//前端传递时使用uids作为json数据的键
