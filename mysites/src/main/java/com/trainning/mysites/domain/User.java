@@ -2,9 +2,10 @@ package com.trainning.mysites.domain;
 
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,11 +24,20 @@ public class User {
     private String name;
 
     public enum Sex{
-      男,女
+      男,女;  //枚举中常量结束位置要有分号
+        public static List<String> toList(){
+            Sex[] sex = Sex.values();
+            List<String> datas = new ArrayList<>(); //定于一个容纳所有枚举的数据
+            for (Sex s : sex) {
+                datas.add(s.name());
+            }
+            return datas;
+        }
+
     };
     private Sex grander;
 
-    private LocalDateTime birthday;
+    private LocalDate birthday;
     @Column(length = 11)
     private String mobile;
 
@@ -80,11 +90,11 @@ public class User {
         this.grander = grander;
     }
 
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

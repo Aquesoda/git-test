@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.List;
 @Service
 public class UserDaoImpl implements UserService {
@@ -18,6 +19,7 @@ public class UserDaoImpl implements UserService {
     @Override
     public void save(User u)throws Exception {
         try {
+            u.setLasttime((int)Instant.now().getEpochSecond());
             userRepository.save(u);
         } catch (Exception ex){
             throw ex;

@@ -45,6 +45,7 @@ public class UserController {
 
     @RequestMapping("/listusers")
     public String list(String kw, Model model, Pageable pageable){
+        model.addAttribute("kw",kw);    //将信息保存下来
         if(kw!=null) kw = "%"+kw+"%";
         if(kw == null) kw = "%%";
         Page<User> ppu = userService.findAll(kw,pageable);
@@ -58,6 +59,7 @@ public class UserController {
             if(uid!=null&&uid>0){
                 u = userService.findById(uid);
             }
+            model.addAttribute("sexes",User.Sex.toList());
             model.addAttribute("user",u);
             return "edituser";
     }
